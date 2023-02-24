@@ -8,9 +8,10 @@
 
 5. create a file, in which should be all the 'restricted' domains -- Done
 
-6. create a queue, and put every link in the queue
+6. create a queue, and put every link in the queue -- created list, and appended every link, 
+    seems to be working, but not quite right, some links are reapeted  -- Done Partially
 
-7. create a set, which will be populated by the urls already visited
+7. create a set, which will be populated by the urls already visited -- Done
 
 8. create 5 sets, each of which will contain urls that responded with different responce codes
-   for example, set100, set200, set300, set400, set500.
+   for example, set100, set200, set300, set400, set500. -- Done
