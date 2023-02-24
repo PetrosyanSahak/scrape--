@@ -16,7 +16,7 @@ for url in urls:
   
     soup = BeautifulSoup(page, "html.parser")
     for link in soup.find_all(attrs={'href': re.compile("http")}):
-        links.append(link.get('href')
+        links.append(link.get('href'))
           
 for link in links:
     print(link)
