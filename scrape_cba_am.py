@@ -1,5 +1,7 @@
 # this script is not ready yet
-# cannot open aspx websites, even working ones
+# some websites cannot be opened, even though 
+# with browser it opens
+# scan number is 25, but returns only 17 url. Must be some bug
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # 
 from urllib.request import urlopen
@@ -8,8 +10,8 @@ import ssl
 import tld
 import re
 
-# this line fixes some errors that I did have time to research
-# taken form stackoverflow, seems to work
+# this line fixes some errors that I did not have time to research
+# taken from stackoverflow, seems to work
 ssl._create_default_https_context = ssl._create_unverified_context
 with open('restricted_domains.txt') as f:
   RESTRICTED_DOMAINS = { line.rstrip() for line in f}
@@ -22,7 +24,7 @@ with open('urls.txt') as f:
 DOMAIN_SCRAPED = "cba.am"
 CURSOR_UP = '\033[F'
 ERASE_LINE = '\033[K'
-SCRAPE_COUNT = 55
+SCRAPE_COUNT = 25
 
 print("Starting urls to be scanned!\n")
 for link in urls:
