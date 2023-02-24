@@ -11,6 +11,11 @@ import re
 # this line fixes some errors that I did have time to research
 # taken form stackoverflow, seems to work
 ssl._create_default_https_context = ssl._create_unverified_context
+with open('restricted_domains.txt') as f:
+  RESTRICTED_DOMAINS = { line.rstrip() for line in f}
+
+with open('urls.txt') as f:
+  urls = [ line.rstrip() for line in f]
 
 # the only domain we want to scrape
 DOMAIN_SCRAPED = "cba.am"
@@ -19,7 +24,6 @@ ERASE_LINE = '\033[K'
 SCRAPE_COUNT = 25
 
 
-urls = ["https://cba.am"]
 url_could_not_open = set()
 url_1xx_response = set()
 url_2xx_response = set()
@@ -33,6 +37,7 @@ print()
 for url in urls:
     if(pages_scraped > SCRAPE_COUNT):
         break
+    
 
     print(CURSOR_UP + ERASE_LINE + CURSOR_UP)
     print(f"{pages_scraped} out of {SCRAPE_COUNT} have been scraped...")
@@ -81,6 +86,9 @@ for url in urls:
         #if the domain.tld is not cba.am continue
         if dom != DOMAIN_SCRAPED:
             # print(dom)
+            continue
+        if dom in ESTRICTED_DOMAINS:
+            print(f"Encountered restricted domain {link}, continue...")
             continue
         else:
             if(link not in visited_urls):
