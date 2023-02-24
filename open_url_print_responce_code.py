@@ -6,6 +6,6 @@ from bs4 import BeautifulSoup
 url = "https://youtube.com"
 
 website = urlopen(url)
-print(website.getcode())
+print(f"{url} responce code: {website.getcode()}")
 
 
