@@ -21,11 +21,11 @@ SCRAPE_COUNT = 25
 
 urls = ["https://cba.am"]
 url_could_not_open = set()
-url_1xx_responce = set()
-url_2xx_responce = set()
-url_3xx_responce = set()
-url_4xx_responce = set()
-url_5xx_responce = set()
+url_1xx_response = set()
+url_2xx_response = set()
+url_3xx_response = set()
+url_4xx_response = set()
+url_5xx_response = set()
 visited_urls = set() 
 
 pages_scraped = 0
@@ -53,19 +53,19 @@ for url in urls:
         url_could_not_open.add(url)
         continue
 
-    responce = page.getcode()
-    # print(f"Responce Code for {url}: {responce}\n\n")
+    response = page.getcode()
+    # print(f"Response Code for {url}: {response}\n\n")
 
-    if 100 <= responce < 200:
-        url_1xx_responce.add(url)
-    elif 200 <= responce < 300:
-        url_2xx_responce.add(url)
-    elif 300 <= responce < 400:
-        url_3xx_responce.add(url)
-    elif 400 <= responce < 500:
-        url_4xx_responce.add(url)
-    elif 500 <= responce < 600:
-        url_2xx_responce.add(url)
+    if 100 <= response < 200:
+        url_1xx_response.add(url)
+    elif 200 <= response < 300:
+        url_2xx_response.add(url)
+    elif 300 <= response < 400:
+        url_3xx_response.add(url)
+    elif 400 <= response < 500:
+        url_4xx_response.add(url)
+    elif 500 <= response < 600:
+        url_2xx_response.add(url)
     
     # find all links in the current url, and add it to the links list
     soup = BeautifulSoup(page, "html.parser")
@@ -90,31 +90,31 @@ for url in urls:
                      
 print(f"scraping finished, scanned {SCRAPE_COUNT} websites!")
 
-print("Webistes which responce value starts with 1xx\n")
-for link in url_1xx_responce:
+print("Webistes which response value starts with 1xx\n")
+for link in url_1xx_response:
     print(f"{link}\n")
 
 print("\n\n")
 
-print("Webistes which responce value starts with 2xx\n")
-for link in url_2xx_responce:
+print("Webistes which response value starts with 2xx\n")
+for link in url_2xx_response:
     print(f"{link}\n")
 
 print("\n\n")
 
-print("Webistes which responce value starts with 3xx\n")
-for link in url_3xx_responce:
+print("Webistes which response value starts with 3xx\n")
+for link in url_3xx_response:
     print(f"{link}\n")
 
 print("\n\n")
-print("Webistes which responce value starts with 4xx\n")
-for link in url_4xx_responce:
+print("Webistes which response value starts with 4xx\n")
+for link in url_4xx_response:
     print(f"{link}\n")
 
 print("\n\n")
 
-print("Webistes which responce value starts with 5xx\n")
-for link in url_5xx_responce:
+print("Webistes which response value starts with 5xx\n")
+for link in url_5xx_response:
     print(f"{link}\n")
 
 print("\n\n")
