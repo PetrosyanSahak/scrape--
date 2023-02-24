@@ -1,0 +1,11 @@
+1. Read website given the url
+
+2. check the responce code
+
+3. find all the links in the responce
+
+4. create a file, in which should be all the 'starting' urls
+
+5. create a queue, and put every link in the queue
+
+6. create a set, which will be populated by the urls already visited
