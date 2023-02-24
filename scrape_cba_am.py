@@ -13,10 +13,11 @@ import re
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # the only domain we want to scrape
+DOMAIN_SCRAPED = "cba.am"
 CURSOR_UP = '\033[F'
 ERASE_LINE = '\033[K'
 SCRAPE_COUNT = 25
-DOMAIN_SCRAPED = "cba.am"
+
 
 urls = ["https://cba.am"]
 url_could_not_open = set()
