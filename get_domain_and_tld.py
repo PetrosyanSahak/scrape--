@@ -1,4 +1,4 @@
-# this script gets the 'main' domain with the tld
+# this script gets the 'main' domain with the tld (without any subdomain)
 # we have certain domains that we should not scan
 # so we will check if the url belongs to the restricted domains
 
