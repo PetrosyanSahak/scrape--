@@ -28,7 +28,7 @@ for url in urls:
     # find all links in the current url, and add it to the links list
     soup = BeautifulSoup(page, "html.parser")
     for link in soup.find_all(attrs={'href': re.compile("http")}):
-        links.append(link.get('href')
+        links.append(link.get('href'))
      
     # check if the link's domain is cba.am
     # and we have not visited it, add it to the queue
@@ -39,7 +39,7 @@ for url in urls:
         #if the domain.tld is not cba.am continue
         if dom != "cba.am":
             continue
-        else
+        else:
             if(link not in visited_urls):
                      url += link
     pages_scraped += 1
