@@ -23,6 +23,8 @@ CURSOR_UP = '\033[F'
 ERASE_LINE = '\033[K'
 SCRAPE_COUNT = 25
 
+for link in urls:
+    print(link)
 
 url_could_not_open = set()
 url_1xx_response = set()
@@ -87,7 +89,7 @@ for url in urls:
         if dom != DOMAIN_SCRAPED:
             # print(dom)
             continue
-        if dom in ESTRICTED_DOMAINS:
+        if dom in RESTRICTED_DOMAINS:
             print(f"Encountered restricted domain {link}, continue...")
             continue
         else:
