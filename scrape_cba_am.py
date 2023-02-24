@@ -1,9 +1,10 @@
 # this script is not ready yet
+# cannot open aspx websites, even working ones
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # 
-import ssl
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import ssl
 import tld
 import re
 
@@ -12,19 +13,28 @@ import re
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # the only domain we want to scrape
-domain_scraped = "cba.am"
-
-
-#with open('urls.txt') as f:
-#  urls = [ line.rstrip() for line in f]
+CURSOR_UP = '\033[F'
+ERASE_LINE = '\033[K'
+SCRAPE_COUNT = 25
+DOMAIN_SCRAPED = "cba.am"
 
 urls = ["https://cba.am"]
+url_could_not_open = set()
+url_1xx_responce = set()
+url_2xx_responce = set()
+url_3xx_responce = set()
+url_4xx_responce = set()
+url_5xx_responce = set()
 visited_urls = set() 
-SCRAPE_COUNT = 10
-pages_scraped = 0
 
+pages_scraped = 0
+print()
 for url in urls:
-    print(f"Current URl being scraped: {url}\n")
+    if(pages_scraped > SCRAPE_COUNT):
+        break
+
+    print(CURSOR_UP + ERASE_LINE + CURSOR_UP)
+    print(f"{pages_scraped} out of {SCRAPE_COUNT} have been scraped...")
     # add the url to the visisted url set
     visited_urls.add(url)
     
@@ -35,12 +45,26 @@ for url in urls:
         #open the website and get the responce code
         page = urlopen(url)
     except:
-        print("!!!!!!!!!!!!!!!!!!!!!!!\n")
-        print(f"Could not open url: {url}")
-        print("!!!!!!!!!!!!!!!!!!!!!!!\n\n")
+        # print("!!!!!!!!!!!!!!!!!!!!!!!\n")
+        # print(f"Could not open url: {url}")
+        # print("!!!!!!!!!!!!!!!!!!!!!!!\n\n")
         pages_scraped += 1
+        url_could_not_open.add(url)
         continue
-    print(f"Responce Code for {url}: {page.getcode()}\n\n")
+
+    responce = page.getcode()
+    # print(f"Responce Code for {url}: {responce}\n\n")
+
+    if 100 <= responce < 200:
+        url_1xx_responce.add(url)
+    elif 200 <= responce < 300:
+        url_2xx_responce.add(url)
+    elif 300 <= responce < 400:
+        url_3xx_responce.add(url)
+    elif 400 <= responce < 500:
+        url_4xx_responce.add(url)
+    elif 500 <= responce < 600:
+        url_2xx_responce.add(url)
     
     # find all links in the current url, and add it to the links list
     soup = BeautifulSoup(page, "html.parser")
@@ -54,15 +78,47 @@ for url in urls:
         res = tld.get_tld(link, as_object=True)
         dom = f"{res.domain}.{res}"
         #if the domain.tld is not cba.am continue
-        if dom != domain_scraped:
-            print(dom)
+        if dom != DOMAIN_SCRAPED:
+            # print(dom)
             continue
         else:
             if(link not in visited_urls):
-                print(f"appending link: {link}")
+                # print(f"appending link: {link}")
                 urls.append(link)
     pages_scraped += 1
-    if(pages_scraped > SCRAPE_COUNT):
-        break
                      
-print("scraping finished, scanned {SCRAPE_COUNT} websites!")
+print(f"scraping finished, scanned {SCRAPE_COUNT} websites!")
+
+print("Webistes which responce value starts with 1xx\n")
+for link in url_1xx_responce:
+    print(f"{link}\n")
+
+print("\n\n")
+
+print("Webistes which responce value starts with 2xx\n")
+for link in url_2xx_responce:
+    print(f"{link}\n")
+
+print("\n\n")
+
+print("Webistes which responce value starts with 3xx\n")
+for link in url_3xx_responce:
+    print(f"{link}\n")
+
+print("\n\n")
+print("Webistes which responce value starts with 4xx\n")
+for link in url_4xx_responce:
+    print(f"{link}\n")
+
+print("\n\n")
+
+print("Webistes which responce value starts with 5xx\n")
+for link in url_5xx_responce:
+    print(f"{link}\n")
+
+print("\n\n")
+
+
+print("ATTENTION, WE COULD NOT OPEN THESE WEBSITES!!!\n")
+for link in url_could_not_open:
+    print(f"{link}\n")
