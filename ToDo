@@ -6,6 +6,8 @@
 
 4. create a file, in which should be all the 'starting' urls -- Done
 
-5. create a queue, and put every link in the queue
+5. create a file, in which should be all the 'restricted' domains -- Done
 
-6. create a set, which will be populated by the urls already visited
+6. create a queue, and put every link in the queue
+
+7. create a set, which will be populated by the urls already visited
