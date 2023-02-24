@@ -7,7 +7,7 @@ import re
 
 url = "https://youtube.com"
 
-page - urlopen(url)
+page = urlopen(url)
 print(page.getcode())
 
 soup = BeautifulSoup(page, "html.parser")
