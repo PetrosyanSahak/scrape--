@@ -17,14 +17,18 @@ with open('restricted_domains.txt') as f:
 with open('urls.txt') as f:
   urls = [ line.rstrip() for line in f]
 
+
 # the only domain we want to scrape
 DOMAIN_SCRAPED = "cba.am"
 CURSOR_UP = '\033[F'
 ERASE_LINE = '\033[K'
-SCRAPE_COUNT = 25
+SCRAPE_COUNT = 55
 
+print("Starting urls to be scanned!\n")
 for link in urls:
     print(link)
+
+print()
 
 url_could_not_open = set()
 url_1xx_response = set()
@@ -40,6 +44,16 @@ for url in urls:
     if(pages_scraped > SCRAPE_COUNT):
         break
     
+    res = tld.get_tld(url, as_object=True)
+    dom = f"{res.domain}.{res}"
+    # print(dom)
+    if dom in RESTRICTED_DOMAINS:
+        print(f"Restricted domain encountered {dom}, continuing...")
+        continue
+    #if the domain.tld is not cba.am continue
+    if dom != DOMAIN_SCRAPED:
+        # print(dom)
+        continue
 
     print(CURSOR_UP + ERASE_LINE + CURSOR_UP)
     print(f"{pages_scraped} out of {SCRAPE_COUNT} have been scraped...")
@@ -89,7 +103,7 @@ for url in urls:
         if dom != DOMAIN_SCRAPED:
             # print(dom)
             continue
-        if dom in RESTRICTED_DOMAINS:
+        elif dom in RESTRICTED_DOMAINS:
             print(f"Encountered restricted domain {link}, continue...")
             continue
         else:
@@ -132,4 +146,4 @@ print("\n\n")
 
 print("ATTENTION, WE COULD NOT OPEN THESE WEBSITES!!!\n")
 for link in url_could_not_open:
-    print(f"{link}\n")
+    print(f"{link}")
