@@ -2,7 +2,7 @@
 # find all links in the html
 # print found links
 from urllib.request import urlopen
-from bs4 import BautifulSoup
+from bs4 import BeautifulSoup
 import re
 
 url = "https://youtube.com"
