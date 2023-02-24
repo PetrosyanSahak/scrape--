@@ -1,3 +1,7 @@
+# requires urls.txt to be present
+# opens every url in the urls.txt file
+# finds all the links in each url
+# prints all the found links
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
