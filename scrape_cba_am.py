@@ -5,6 +5,7 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # 
 from urllib.request import urlopen
+from urllib.error import HTTPError
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 import ssl
@@ -69,7 +70,7 @@ for url in urls:
     try:
         #open the website and get the responce code
         page = urlopen(url)
-    except:
+    except HTTPError as err:
         # print("!!!!!!!!!!!!!!!!!!!!!!!\n")
         # print(f"Could not open url: {url}")
         # print("!!!!!!!!!!!!!!!!!!!!!!!\n\n")
