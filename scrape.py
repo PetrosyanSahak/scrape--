@@ -1,4 +1,4 @@
-port idna
+import idna
 import validators
 import urllib.parse
 from urllib.parse import quote
