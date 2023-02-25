@@ -10,10 +10,11 @@ for url in urls:
         page = urlopen(url)
     except HTTPError as err:
         print(f"could not open website {url}. HTTPError")
-        print(page.getcode())
+        print(err.code)
         continue
     except URLError as err:
         print(f"could not open website {url}. URLError")
+        continue
 
     print(page.getcode())
 
