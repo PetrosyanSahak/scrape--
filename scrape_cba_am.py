@@ -24,7 +24,7 @@ with open('urls.txt') as f:
 
 
 # the only domain we want to scrape
-DOMAIN_SCRAPED = "cba.am"
+DOMAINS_SCRAPED = ["lichess.org", "cba.am"]
 CURSOR_UP = '\033[F'
 ERASE_LINE = '\033[K'
 SCRAPE_COUNT = 25
@@ -56,7 +56,7 @@ for url in urls:
         print(f"Restricted domain encountered {dom}, continuing...")
         continue
     #if the domain.tld is not cba.am continue
-    if dom != DOMAIN_SCRAPED:
+    if dom not in  DOMAINS_SCRAPED:
         # print(dom)
         continue
 
@@ -72,15 +72,49 @@ for url in urls:
         #open the website and get the responce code
         page = urlopen(url)
     except HTTPError as err:
+
+        response = err.code
+        print(f"RESPONSE CODE:    {response}")
+        if 100 <= response < 200:
+            url_1xx_response.add(url)
+        elif 200 <= response < 300:
+            url_2xx_response.add(url)
+        elif 300 <= response < 400:
+            url_3xx_response.add(url)
+        elif 400 <= response < 500:
+            url_4xx_response.add(url)
+        elif 500 <= response < 600:
+            url_2xx_response.add(url)
         print(f"could not open website {url}. HTTPError")
         pages_scraped += 1
         url_could_not_open.add(url)
         continue
     except URLError as err:
+        
+        response = err.code
+        print(f"RESPONSE CODE:    {response}")
         print(f"could not open website {url}. URLError")
+        if 100 <= response < 200:
+            url_1xx_response.add(url)
+        elif 200 <= response < 300:
+            url_2xx_response.add(url)
+        elif 300 <= response < 400:
+            url_3xx_response.add(url)
+        elif 400 <= response < 500:
+            url_4xx_response.add(url)
+        elif 500 <= response < 600:
+            url_2xx_response.add(url)
         pages_scraped += 1
         url_could_not_open.add(url)
         continue
+    except:
+        # print(f"RESPONSE CODE:    {status_code}")
+        print(f"could not open website {url}. EXCEPT")
+        pages_scraped += 1
+        url_could_not_open.add(url)
+        continue
+
+    
 
     response = page.getcode()
     # print(f"Response Code for {url}: {response}\n\n")
@@ -108,7 +142,7 @@ for url in urls:
         res = tld.get_tld(link, as_object=True)
         dom = f"{res.domain}.{res}"
         #if the domain.tld is not cba.am continue
-        if dom != DOMAIN_SCRAPED:
+        if dom not in DOMAINS_SCRAPED:
             # print(dom)
             continue
         elif dom in RESTRICTED_DOMAINS:
