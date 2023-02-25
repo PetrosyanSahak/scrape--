@@ -169,6 +169,11 @@ print("ATTENTION, WE COULD NOT OPEN THESE WEBSITES!!!\n")
 for link in url_could_not_open:
     print(f"{link}")
 
+print()
+print("urls visited with 2xx response")
+print()
+for link in url_2xx_response:
+    print(f"{link}")
 data = {
     "1xx": len(url_1xx_response),
     "2xx": len(url_2xx_response),
