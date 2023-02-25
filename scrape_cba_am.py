@@ -1,3 +1,4 @@
+╼ $cat scrape_cba_am.py 
 # this script is not ready yet
 # some websites cannot be opened, even though 
 # with browser it opens
@@ -72,7 +73,6 @@ for url in urls:
         #open the website and get the responce code
         page = urlopen(url)
     except HTTPError as err:
-
         response = err.code
         print(f"RESPONSE CODE:    {response}")
         if 100 <= response < 200:
@@ -86,31 +86,13 @@ for url in urls:
         elif 500 <= response < 600:
             url_2xx_response.add(url)
         print(f"could not open website {url}. HTTPError")
-        pages_scraped += 1
-        url_could_not_open.add(url)
         continue
     except URLError as err:
-        
-        response = err.code
-        print(f"RESPONSE CODE:    {response}")
         print(f"could not open website {url}. URLError")
-        if 100 <= response < 200:
-            url_1xx_response.add(url)
-        elif 200 <= response < 300:
-            url_2xx_response.add(url)
-        elif 300 <= response < 400:
-            url_3xx_response.add(url)
-        elif 400 <= response < 500:
-            url_4xx_response.add(url)
-        elif 500 <= response < 600:
-            url_2xx_response.add(url)
-        pages_scraped += 1
         url_could_not_open.add(url)
         continue
     except:
-        # print(f"RESPONSE CODE:    {status_code}")
         print(f"could not open website {url}. EXCEPT")
-        pages_scraped += 1
         url_could_not_open.add(url)
         continue
 
@@ -148,10 +130,9 @@ for url in urls:
         elif dom in RESTRICTED_DOMAINS:
             print(f"Encountered restricted domain {link}, continue...")
             continue
-        else:
-            if(link not in visited_urls):
-                # print(f"appending link: {link}")
-                urls.append(link)
+        if(link not in visited_urls):
+            # print(f"appending link: {link}")
+            urls.append(link)
     pages_scraped += 1
                      
 print(f"scraping finished, scanned {SCRAPE_COUNT} websites!")
@@ -197,6 +178,10 @@ data = { '1xx':len(url_1xx_response),
         '5xx':len(url_5xx_response), 
         'Could not open':len(url_could_not_open) }
 
+print("--------------------")
+
+#for url  in visited_urls:
+#    print(f"{url.lower()}\n")
 response_type = list(data.keys())
 response_count = list(data.values())
 
