@@ -1,6 +1,7 @@
 import idna
 import validators
 import urllib.parse
+from urllib.parse import quote
 from urllib.parse import unquote
 from urllib.request import urlopen
 from urllib.error import HTTPError
@@ -13,14 +14,16 @@ import re
 
 def idnencode(url, current_domain=""):
     url = unquote(url)
-    if(not validators.url(url)):
+    if(current_domain == ""):
+        pass
+    elif(not validators.url(url)):
         url = "http://" + current_domain + url 
-    try:
-        d = urllib.parse.urlparse(url)
-        return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + d.path
-    except:
-        print(url)
-        exit(1)
+#    try:
+    d = urllib.parse.urlparse(url)
+    return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path) + d.params + d.query + d.fragment 
+    #except:
+    #    print(url)
+    #    exit(1)
 
 def add_url_to_set(response, url):
         if 100 <= response < 200:
@@ -99,7 +102,7 @@ for url in urls:
     except:
         print(f"could not open website {url}. EXCEPT")
         url_could_not_open.append(url)
-        continue
+        exit(1)
 
     response = page.getcode()
     add_url_to_set(page.getcode(), url)
