@@ -35,7 +35,7 @@ for link in urls:
 
 print()
 
-url_could_not_open = set()
+url_could_not_open = set() # maybe list is better choice
 url_1xx_response = set()
 url_2xx_response = set()
 url_3xx_response = set()
