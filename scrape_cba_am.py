@@ -1,9 +1,13 @@
+etrosyansahak@parrot]─[~/scrape--]
+└──╼ $cat scrape_cba_am.py 
 # this script is not ready yet
 # some websites cannot be opened, even though
 # with browser it opens
 # scan number is 25, but returns only 17 url. Must be some bug
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #
+import idna
+import urllib.parse
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from urllib.error import URLError
@@ -24,7 +28,7 @@ with open("urls.txt") as f:
 
 
 # the only domain we want to scrape
-DOMAINS_SCRAPED = ["lichess.org", "cba.am"]
+# DOMAINS_SCRAPED = ["lichess.org", "cba.am"]
 CURSOR_UP = "\033[F"
 ERASE_LINE = "\033[K"
 SCRAPE_COUNT = 25
@@ -48,17 +52,20 @@ print()
 for url in urls:
     if pages_scraped > SCRAPE_COUNT:
         break
-
-    res = tld.get_tld(url, as_object=True)
-    dom = f"{res.domain}.{res}"
+    try:
+        res = tld.get_tld(url, as_object=True)
+        dom = f"{res.domain}.{res}"
+    except:
+        print("not valid url")
+        continue
     # print(dom)
     if dom in RESTRICTED_DOMAINS:
         print(f"Restricted domain encountered {dom}, continuing...")
         continue
     # if the domain.tld is not cba.am continue
-    if dom not in DOMAINS_SCRAPED:
+  #  if dom not in DOMAINS_SCRAPED:
         # print(dom)
-        continue
+   #     continue
 
     print(CURSOR_UP + ERASE_LINE + CURSOR_UP)
     print(f"{pages_scraped} out of {SCRAPE_COUNT} have been scraped...")
@@ -112,19 +119,30 @@ for url in urls:
     # find all links in the current url, and add it to the links list
     soup = BeautifulSoup(page, "html.parser")
     for link in soup.find_all(attrs={"href": re.compile("http")}):
+       # print(type(link))
+       # print(f"type of linke.get('href') is: {type(link.get('href'))}")
         links.append(link.get("href"))
+
+    for link in soup.find_all(attrs={"xlink:href": re.compile("http")}):
+        d = urllib.parse.urlparse(link.get("xlink:href"))
+        url = d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + d.path
+        links.append(url)
 
     # check if the link's domain is cba.am
     # and we have not visited it, add it to the queue
     for link in links:
         # get domain.tld of the current url
-        res = tld.get_tld(link, as_object=True)
-        dom = f"{res.domain}.{res}"
-        # if the domain.tld is not cba.am continue
-        if dom not in DOMAINS_SCRAPED:
-            # print(dom)
+        try:
+            res = tld.get_tld(link, as_object=True)
+            dom = f"{res.domain}.{res}"
+        except:
+            print("not a valid url")
             continue
-        elif dom in RESTRICTED_DOMAINS:
+        # if the domain.tld is not cba.am continue
+        #if dom not in DOMAINS_SCRAPED:
+            # print(dom)
+         #   continue
+        if dom in RESTRICTED_DOMAINS:
             print(f"Encountered restricted domain {link}, continue...")
             continue
         if link not in visited_urls:
