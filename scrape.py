@@ -20,7 +20,7 @@ def idnencode(url, current_domain=""):
         url = "http://" + current_domain + url 
 #    try:
     d = urllib.parse.urlparse(url)
-    return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path) + d.params + d.query + d.fragment 
+    return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path) + "?" + d.params + d.query + d.fragment 
     #except:
     #    print(url)
     #    exit(1)
@@ -172,11 +172,6 @@ print("ATTENTION, WE COULD NOT OPEN THESE WEBSITES!!!\n")
 for link in url_could_not_open:
     print(f"{link}")
 
-print()
-print("urls visited with 2xx response")
-print()
-for link in url_2xx_response:
-    print(f"{link}")
 data = {
     "1xx": len(url_1xx_response),
     "2xx": len(url_2xx_response),
