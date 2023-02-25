@@ -1,4 +1,3 @@
-cat open_urls_from_file_find_all_links.py
 # requires urls.txt to be present
 # opens every url in the urls.txt file
 # finds all the links in each url
@@ -34,6 +33,6 @@ for url in urls:
     soup = BeautifulSoup(page, "html.parser")
     for link in soup.find_all(attrs={'href': re.compile("http")}):
         links.append(link.get('href'))
-          
+
 for link in links:
     print(link)
