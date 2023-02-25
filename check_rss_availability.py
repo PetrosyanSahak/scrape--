@@ -4,7 +4,11 @@ from urllib.error import URLError
 from bs4 import BeautifulSoup
 import re
 
-urls = ["https://www.schneier.com/", "https://www.list.am/", "https://www.antranigv.am/weblog/"]
+urls = [
+    "https://www.schneier.com/",
+    "https://www.list.am/",
+    "https://www.antranigv.am/weblog/",
+]
 for url in urls:
     try:
         page = urlopen(url)
@@ -21,7 +25,7 @@ for url in urls:
     soup = BeautifulSoup(page, "html.parser")
     links = []
 
-    for link in soup.find_all(attrs={'href': re.compile("http")}):
-        links.append(link.get('href'))
-        if (link.get('type') == "application/rss+xml"):
+    for link in soup.find_all(attrs={"href": re.compile("http")}):
+        links.append(link.get("href"))
+        if link.get("type") == "application/rss+xml":
             print(f"RSS available for {link.get('href')}")
