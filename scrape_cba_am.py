@@ -1,4 +1,3 @@
-╼ $cat scrape_cba_am.py 
 # this script is not ready yet
 # some websites cannot be opened, even though 
 # with browser it opens
