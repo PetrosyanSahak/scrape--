@@ -1,4 +1,4 @@
-import idna
+port idna
 import validators
 import urllib.parse
 from urllib.parse import quote
@@ -18,12 +18,14 @@ def idnencode(url, current_domain=""):
         pass
     elif(not validators.url(url)):
         url = "http://" + current_domain + url 
-#    try:
-    d = urllib.parse.urlparse(url)
-    return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path) + "?" + d.params + d.query + d.fragment 
-    #except:
-    #    print(url)
-    #    exit(1)
+        return url
+    try:
+        d = urllib.parse.urlparse(url)
+        return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path) + "?" + d.params + d.query + d.fragment 
+    except:
+        url_could_not_open.append(url)
+        print(url)
+        return
 
 def add_url_to_set(response, url):
         if 100 <= response < 200:
@@ -50,7 +52,7 @@ with open("urls.txt") as f:
 # DOMAINS_SCRAPED = ["lichess.org", "cba.am"]
 CURSOR_UP = "\033[F"
 ERASE_LINE = "\033[K"
-SCRAPE_COUNT = 25
+SCRAPE_COUNT = 125
 pages_scraped = 0
 
 print("Starting urls to be scanned!\n")
