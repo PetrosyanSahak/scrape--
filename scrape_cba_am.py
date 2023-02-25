@@ -6,6 +6,7 @@
 # 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
 import ssl
 import tld
 import re
@@ -149,3 +150,23 @@ print("\n\n")
 print("ATTENTION, WE COULD NOT OPEN THESE WEBSITES!!!\n")
 for link in url_could_not_open:
     print(f"{link}")
+
+data = { '1xx':len(url_1xx_response),
+        '2xx':len(url_2xx_response), 
+        '3xx':len(url_3xx_response), 
+        '4xx':len(url_4xx_response), 
+        '5xx':len(url_5xx_response), 
+        'Could not open':len(url_could_not_open) }
+
+response_type = list(data.keys())
+response_count = list(data.values())
+
+fig = plt.figure(figsize = (10, 5))
+
+plt.bar(response_type, response_count, color='maroon', width = 0.4)
+
+plt.xlabel("Return codes (optionally could not open)")
+plt.ylabel("No. of websites")
+
+plt.title("Website response codes")
+plt.show()
