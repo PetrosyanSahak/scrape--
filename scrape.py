@@ -1,11 +1,3 @@
-etrosyansahak@parrot]─[~/scrape--]
-└──╼ $cat scrape_cba_am.py 
-# this script is not ready yet
-# some websites cannot be opened, even though
-# with browser it opens
-# scan number is 25, but returns only 17 url. Must be some bug
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#
 import idna
 import urllib.parse
 from urllib.request import urlopen
@@ -17,14 +9,18 @@ import ssl
 import tld
 import re
 
-# this line fixes some errors that I did not have time to research
-# taken from stackoverflow, seems to work
+def idnencode(url):
+        d = urllib.parse.urlparse(url)
+        return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + d.path
+
+
 ssl._create_default_https_context = ssl._create_unverified_context
+
 with open("restricted_domains.txt") as f:
     RESTRICTED_DOMAINS = {line.rstrip() for line in f}
 
 with open("urls.txt") as f:
-    urls = [line.rstrip() for line in f]
+    urls = [idnencode(line.rstrip()) for line in f]
 
 
 # the only domain we want to scrape
@@ -32,6 +28,7 @@ with open("urls.txt") as f:
 CURSOR_UP = "\033[F"
 ERASE_LINE = "\033[K"
 SCRAPE_COUNT = 25
+pages_scraped = 0
 
 print("Starting urls to be scanned!\n")
 for link in urls:
@@ -39,33 +36,32 @@ for link in urls:
 
 print()
 
-url_could_not_open = set() # maybe list is better choice
-url_1xx_response = set()
-url_2xx_response = set()
-url_3xx_response = set()
-url_4xx_response = set()
-url_5xx_response = set()
+url_could_not_open = [] 
+url_1xx_response = []
+url_2xx_response = []
+url_3xx_response = []
+url_4xx_response = []
+url_5xx_response = []
 visited_urls = set()
 
-pages_scraped = 0
-print()
 for url in urls:
     if pages_scraped > SCRAPE_COUNT:
         break
+
     try:
         res = tld.get_tld(url, as_object=True)
         dom = f"{res.domain}.{res}"
     except:
         print("not valid url")
         continue
-    # print(dom)
+
     if dom in RESTRICTED_DOMAINS:
         print(f"Restricted domain encountered {dom}, continuing...")
         continue
     # if the domain.tld is not cba.am continue
-  #  if dom not in DOMAINS_SCRAPED:
-        # print(dom)
-   #     continue
+    # if dom not in DOMAINS_SCRAPED:
+    #     print(dom)
+    #     continue
 
     print(CURSOR_UP + ERASE_LINE + CURSOR_UP)
     print(f"{pages_scraped} out of {SCRAPE_COUNT} have been scraped...")
@@ -82,54 +78,49 @@ for url in urls:
         response = err.code
         print(f"RESPONSE CODE:    {response}")
         if 100 <= response < 200:
-            url_1xx_response.add(url)
+            url_1xx_response.append(url)
         elif 200 <= response < 300:
-            url_2xx_response.add(url)
+            url_2xx_response.append(url)
         elif 300 <= response < 400:
-            url_3xx_response.add(url)
+            url_3xx_response.append(url)
         elif 400 <= response < 500:
-            url_4xx_response.add(url)
+            url_4xx_response.append(url)
         elif 500 <= response < 600:
-            url_2xx_response.add(url)
+            url_2xx_response.append(url)
         print(f"could not open website {url}. HTTPError")
         continue
     except URLError as err:
         print(f"could not open website {url}. URLError")
-        url_could_not_open.add(url)
+        url_could_not_open.append(url)
         continue
     except:
         print(f"could not open website {url}. EXCEPT")
-        url_could_not_open.add(url)
+        url_could_not_open.append(url)
         continue
 
     response = page.getcode()
     # print(f"Response Code for {url}: {response}\n\n")
 
     if 100 <= response < 200:
-        url_1xx_response.add(url)
+        url_1xx_response.append(url)
     elif 200 <= response < 300:
-        url_2xx_response.add(url)
+        url_2xx_response.append(url)
     elif 300 <= response < 400:
-        url_3xx_response.add(url)
+        url_3xx_response.append(url)
     elif 400 <= response < 500:
-        url_4xx_response.add(url)
+        url_4xx_response.append(url)
     elif 500 <= response < 600:
-        url_2xx_response.add(url)
+        url_2xx_response.append(url)
 
     # find all links in the current url, and add it to the links list
     soup = BeautifulSoup(page, "html.parser")
     for link in soup.find_all(attrs={"href": re.compile("http")}):
-       # print(type(link))
-       # print(f"type of linke.get('href') is: {type(link.get('href'))}")
-        links.append(link.get("href"))
+        links.append( idnencode(link.get("href") ))
 
     for link in soup.find_all(attrs={"xlink:href": re.compile("http")}):
-        d = urllib.parse.urlparse(link.get("xlink:href"))
-        url = d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + d.path
-        links.append(url)
+        links.append( idnencode(link.get("xlink:href") ))
 
-    # check if the link's domain is cba.am
-    # and we have not visited it, add it to the queue
+    # if we have not visited the link, add it to the list
     for link in links:
         # get domain.tld of the current url
         try:
@@ -139,14 +130,13 @@ for url in urls:
             print("not a valid url")
             continue
         # if the domain.tld is not cba.am continue
-        #if dom not in DOMAINS_SCRAPED:
-            # print(dom)
-         #   continue
+        # if dom not in DOMAINS_SCRAPED:
+        #     print(dom)
+        #     continue
         if dom in RESTRICTED_DOMAINS:
             print(f"Encountered restricted domain {link}, continue...")
             continue
         if link not in visited_urls:
-            # print(f"appending link: {link}")
             urls.append(link)
     pages_scraped += 1
 
