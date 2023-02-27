@@ -1,3 +1,5 @@
+import urlparse
+
 class url:
     
     def get_full_url(self):
@@ -12,5 +14,6 @@ class url:
       response_code_m = response_code
       rss_avail_m = rss_avail
       
- 
+    def is_absolute(self):
+        return bool(urlparse.urlparse(url_m).netloc)
     
