@@ -2,6 +2,7 @@ class url:
     
     def get_full_url(self):
       # construct the full url, so that we can open it
+      # add scheme and domain if url is relative (https:// + example.com)
       # url unquote if applicable
     def __init__(self, url = '', parent_urls = [], is_relative = False, parent_scheme_domain = '', response_code = 0, rss_avail = False):
       url_m = ''
