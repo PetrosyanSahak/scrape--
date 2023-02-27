@@ -22,15 +22,18 @@ from urllib.request import urlopen
 class url:
     
     def get_full_url(self):
-        if is_absolute(self):
-            url_temp = unquote(self.url_m)
-            while(url_temp != unquote(url_temp)):
-                  url_temp = unquote(url_temp)
-            d = urllib.parse.urlparse(url1)
-            result = d.scheme + "://" + idna.encode(d.netloc).decode('ascii')
-            return result
+        if not is_absolute(self):
+            url1 = self.parent_scheme_domain + self.url_m
         else:
-            pass
+            url1 = self.url_m
+            
+        url_temp = unquote(self.url1)
+        while(url_temp != unquote(url_temp)):
+              url_temp = unquote(url_temp)
+        d = urllib.parse.urlparse(url1)
+        return = d.scheme + "://" + idna.encode(d.netloc).decode('ascii')
+        
+
             
       # construct the full url, so that we can open it
       # add scheme and domain if url is relative (https:// + example.com)
