@@ -10,18 +10,18 @@ from urllib.request import urlopen
 class Url:
     
     def get_full_url(self):
-        if not self.is_absolute():
-            url_temp = self.parent_scheme_domain_m + self.url_m
-        else:
+        if self.is_absolute():
             url_temp = self.url_m
+        else:
+            url_temp = self.parent_scheme_domain_m + self.url_m
             
-        #url_temp = unquote(url1)
         while(url_temp != unquote(url_temp)):
               url_temp = unquote(url_temp)
 
         d = urllib.parse.urlparse(url_temp)
-        result =  d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path)
-        return result
+        return d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path)
+       # result =  d.scheme + "://" + idna.encode(d.netloc).decode('ascii') + quote(d.path)
+       # return result
         
 
             
